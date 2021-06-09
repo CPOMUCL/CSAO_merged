@@ -1,4 +1,4 @@
-# CSAO_merged document copied from ESA technical note csao_merged_data.docx
+# CSAO_merged document copied from ESA technical note csao_merged_data.docx / csao_merged_data.pdf
 
 CS+AO Merged Data Product
 Merged along track CSAO product (WP3)
