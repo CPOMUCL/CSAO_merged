@@ -34,16 +34,26 @@ def add_ncattr(var):
 # give track details - either time or cycle no. etc
 # load Bl-D L2 file
 class CS2_track():
-    def __init__(self,file,lon_lims=[-180,180],lat_lims=[-90,90],add_attr = False,count_lim = 2):
+    def __init__(self,file,lon_lims=[-180,180],lat_lims=[-90,90],add_attr = False,count_lim = 2,surface_type=None):
         self.name = file
         self.swh_calc = False
         self.add_attr = add_attr
-        data_nc = Dataset(file)
+        try:
+            data_nc = Dataset(file)
+        except OSError:
+            self.use = False
+            return
         lats = data_nc.variables["lat_20_ku"]
         lons = data_nc.variables["lon_20_ku"]
         lon_correct = (lons[:] > lon_lims[0])&(lons[:] < lon_lims[1] )
         lat_correct = (lats[:] > lat_lims[0])&(lats[:] < lat_lims[1] )
         d_u = lon_correct&lat_correct
+        if surface_type is not None:
+            ##### surface typ is list of number to accept
+            surf = data_nc.variables["flag_surf_type_class_20_ku"]
+            s_u =  np.array([surf[:] == s for s in surface_type]).any(axis=0)
+            d_u = d_u&s_u
+            
         if np.sum(d_u)>count_lim:
             self.lon_20_ku = lons[d_u]
             self.lat_20_ku = lats[d_u]
@@ -114,6 +124,7 @@ class CS2_track():
             vnew = data_nc[v] 
             ##### shift from 1hz to 20hz
             if method == 'const':
+                ne = loc_array[-1]
                 for n in range(loc_array.shape[0]-1):
                     ns = loc_array[n]
                     ne = loc_array[n+1]
@@ -194,6 +205,7 @@ class CS2_track():
             if verbos and n == 0: print('No.data in range: '+str(np.sum(vuse)))
             time = time0[vuse]
             locs = np.searchsorted(self.time_20_ku,time+tshift)
+            #### delete repeated entries
             if n==0 and verbos:
                 ### lat error
                 print("add_data_time av position error")

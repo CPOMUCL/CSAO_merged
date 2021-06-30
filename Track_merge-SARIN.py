@@ -54,7 +54,7 @@ lats = [-89,-50]
 COMBINE_FILES = True
 # Combine_name = 'L2_ice_leads_Amundsen_'
 # Combine_name = 'L2_ice_leads_West_Weddell_'
-Combine_name = 'ST_and_range_ANOM_all_'
+Combine_name = 'ST_and_range_ANOM_all_SARIN_'
 def Comb_ST(track):  
     ### sar_ocean  l2
 #     return track.flag_surf_type_class_20_ku == 64 
@@ -78,19 +78,15 @@ def Comb_ST(track):
 Combine_vars= [
 #  'ocean_tide_20_ku_ANOM_DTU_fes',
  'range_1_20_ku',
- 'range_1_20_ku_ANOM_ISat_2step',
- 'range_1_20_ku_ANOM_ISat_SWH_MSSfixed_Ice',
- 'range_1_20_ku_ANOM_DTU_imp_th70',
- 'range_1_20_ku_ANOM_DTU_th70',
- 'range_1_20_ku_ANOM_DTU_gauss',
+#  'range_1_20_ku_ANOM_DTU_imp_th70',
+#  'range_1_20_ku_ANOM_DTU_th70',
+#  'range_1_20_ku_ANOM_DTU_gauss',
  'range_1_20_ku_ANOM_MSSL_D',
  'range_1_20_ku_ANOM_MSSL_S',
  'range_1_20_ku_ANOM_LEGOS_GPOD_All',
- 'range_1_20_ku_ANOM_CLS',
 #  'mean_sea_surf_20_ku_ANOM_DTU15',
 #  'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU15',
 #  'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU21',
-#  'atm_geo_corrections_sum_ANOM_ISat',
 #  'atm_geo_corrections_sum_ANOM_LEGOS_GPOD',
 #  'mean_sea_surf_sea_ice_20_ku','geoid_20_ku',
 #  'height_1_20_ku',
@@ -101,8 +97,6 @@ Combine_vars= [
 #  'ssha_smooth_20_ku_LEGOS_GPOD_Lead',
 #  'ssha_interp_20_ku_ANOM_LEGOS_GPOD',
  'flag_surf_type_class_20_ku',
- 'flag_surf_type_20_ku_CLS',
- 'flag_surf_type_20_ku_LEGOS_GPOD',
  'NSIDC_nasa',
                 ]
 
@@ -169,7 +163,7 @@ for nd in range(n_days):
     ### SAR L2
 #     l1b_root = '/Volumes/BU_extra/CryoSat/L2I/'
     l1b_root = '/cpnet/li1_cpdata/SATS/RA/CRY/L2I/'
-    mode = 'SAR-A'
+    mode = 'SIN'
     # time = dt.datetime(2014,3,1)
     temp_files = glob.glob(l1b_root+mode+time.strftime('/%Y/%m/')+'*.nc')
     temp_files.sort()
@@ -213,17 +207,6 @@ for nd in range(n_days):
            'iono_cor_gim_01','inv_bar_cor_01','hf_fluct_total_cor_01',
             ]
 
-    ### CLS files - 
-#     Cpath = '/Volumes/BU_extra/CryoSat/Antarctica+/CLS/'
-    Cpath = '/home/hds/DATA2/Ant+/DATA/CLS/'
-    Cfiles = ant_plus.add_file('CLS',Cpath,'%b_%Y/',multi_file=False)
-    Cfiles.tvec = 'time_20_ku'
-    # Cfiles.vars = ['range_rtk_cls_20_ku','surf_type_cls_20_ku']
-    # Cfiles.names = ['CLS_range','CLS_surf_type']
-    Cfiles.vars = ['range_rtk_cls_20_ku','surf_type_cls_20_ku','ssh_rtk_cls_20_ku']
-    Cfiles.names = ['range_1_20_ku_CLS','flag_surf_type_20_ku_CLS','height_1_20_ku_CLS']
-
-
 #     ### MSSL compare bas range - date from time gaps
     ### MSSL compare difuse- date from time gaps
     Mpath = '/raid6/userdata/hds/CSAO/MSSL/CSAO_RTRK_MSSL_2019/'
@@ -238,7 +221,7 @@ for nd in range(n_days):
 
     ### MSSL compare difuse- date from time gaps
 #     MDpath = '/Volumes/BU_extra/CryoSat/Antarctica+/MSSL/CSAO_DRSA_MSSL_2019/'
-    MDpath = '/raid6/userdata/hds/CSAO/MSSL/CSAO_DRSA_MSSL_2019/'
+    MDpath = '/raid6/userdata/hds/CSAO/MSSL/CSAO_DRSI_MSSL_2019_v3/'
     MDfiles = ant_plus.add_file('MSSL_D',MDpath,'',name_form = '%Y%m',multi_file=False)
     MDfiles.tvec = 'time_20_ku'
     MDfiles.vars = ['retracker_cor_20_ku']#,'retracker_cor_basd_20_ku']
@@ -248,7 +231,7 @@ for nd in range(n_days):
 
     ### MSSL compare specular - date from time gaps
 #     MSpath = '/Volumes/BU_extra/CryoSat/Antarctica+/MSSL/CSAO_SRSA_MSSL_2019/'
-    MSpath = '/raid6/userdata/hds/CSAO/MSSL/CSAO_SRSA_MSSL_2019/'
+    MSpath = '/raid6/userdata/hds/CSAO/MSSL/CSAO_SRSI_MSSL_2019_v3/'
     MSfiles = ant_plus.add_file('MSSL_S',MSpath,'',name_form = '%Y%m',multi_file=False)
     MSfiles.tvec = 'time_20_ku'
     MSfiles.vars = ['retracker_cor_20_ku']
@@ -257,44 +240,20 @@ for nd in range(n_days):
 #     MSfiles.names = ['MSSL_S_ssha']
     # MSfiles.names = ['MSSL_S_cor']
     
-    ### DTU files - date from filename
-    # Dpath = '/Volumes/BU_extra/CryoSat/Antarctica+/2019_compressed/'
-    Dpath = '/home/hds/DATA2/Ant+/DATA/DTU/'
-    Dfiles = ant_plus.add_file('DTU',Dpath,'%Y/%m/')
-    Dfiles.tvec = 'time_20_ku'
-    Dfiles.vars = ['range_uncorr_imp_th70','range_uncorr_th70',
-                   'range_uncorr_gauss','mss',
-                  'otide_fes'] ### Tide to compare
-    Dfiles.names = ['range_1_20_ku_DTU_imp_th70','range_1_20_ku_DTU_th70',
-                    'range_1_20_ku_DTU_gauss','mean_sea_surf_20_ku_DTU15',
-                   'ocean_tide_20_ku_DTU_fes']
+#     ### DTU files - date from filename
+#     # Dpath = '/Volumes/BU_extra/CryoSat/Antarctica+/2019_compressed/'
+# #     Dpath = '/home/hds/DATA2/Ant+/DATA/DTU/'
+#     Dpath = '/home/hds/DATA/CSAO/DTU/'
+#     Dfiles = ant_plus.add_file('DTU',Dpath,'%Y/%m/')
+#     Dfiles.tvec = 'time_20_ku'
+#     Dfiles.vars = ['range_uncorr_imp_th70','range_uncorr_th70',
+#                    'range_uncorr_gauss','mss',
+#                   'otide_fes'] ### Tide to compare
+#     Dfiles.names = ['range_1_20_ku_DTU_imp_th70','range_1_20_ku_DTU_th70',
+#                     'range_1_20_ku_DTU_gauss','mean_sea_surf_20_ku_DTU15',
+#                    'ocean_tide_20_ku_DTU_fes']
     
-    ### ISat files - date from filename
-    # Ipath = '/Volumes/BU_extra/CryoSat/Antarctica+/IsardSat/2019_March_September_leads/'
-    ILpath = '/raid6/userdata/hds/CSAO/IsardSat/Leads/'
-    ILfiles = ant_plus.add_file('IsardSat_Leads',ILpath,'%m/',name_blurb='data/')
-    ILfiles.tvec = 'time_20_ku'
-    ILfiles.vars = ['retracked_range_analytical_2step_20_ku',
-                  'total_geo_corr_20_ku']
-    ILfiles.names = ['range_1_20_ku_ISat_2step',
-                   'atm_geo_corrections_sum_ISat']
-
-    ### ISat files - date from filename
-#     ISpath = '/Volumes/BU_extra/CryoSat/Antarctica+/IsardSat/2019_March_September_Sea_Ice/'
-    ISpath = '/raid6/userdata/hds/CSAO/IsardSat/Sea_Ice/'
-    ISfiles = ant_plus.add_file('IsardSat_Ice',ISpath,'%m/',name_blurb='data/')
-    ISfiles.tvec = 'time_20_ku'
-    ISfiles.vars = [#'range_20_ku',
-    #                 'retracked_range_threshold_20_ku',
-    #                 'retracked_range_OCOG_20_ku',
-                    'retracked_range_analytical_SWH_MSSfixed_20_ku',
-                  'total_geo_corr_20_ku']
-    ISfiles.names = [#'range_1_20_ku_ISat_Ice',
-    #                  'range_1_20_ku_ISat_th_Ice',
-    #                  'range_1_20_ku_ISat_OCOG_Ice',
-                     'range_1_20_ku_ISat_SWH_MSSfixed_Ice',
-                   'atm_geo_corrections_sum_ISat_Ice']
-    ##### variable names that are loaded but we don't want to save
+#     ##### variable names that are loaded but we don't want to save
     var_remove = [
         'range_MSSL_Dcor',
         'range_MSSL_Scor',
@@ -304,7 +263,8 @@ for nd in range(n_days):
 
     # All_files = [Dfiles,Cfiles,Ifiles,MDfiles,MSfiles]
 #     All_files = [Dfiles,Cfiles,Mfiles,MDfiles,MSfiles]
-    All_files = [Cfiles,Mfiles,MDfiles,MSfiles,Dfiles,ILfiles,ISfiles]
+#     All_files = [Mfiles,MDfiles,MSfiles,Dfiles]
+    All_files = [Mfiles,MDfiles,MSfiles]
     # All_files = [Dfiles]
     for Af in All_files:
         Af.get_files_times(time,verbos=True)
@@ -312,7 +272,8 @@ for nd in range(n_days):
 
     ### GPOD is special because it's in cycles sub folders
 #     Gpath = '/Volumes/BU_extra/CryoSat/Antarctica+/GPOD_2020/'
-    Gpath = '/home/hds/DATA/CSAO/LEGOS_GPOD/SAR/'
+#     Gpath = '/home/hds/DATA/CSAO/LEGOS_GPOD/SAR/'
+    Gpath = '/home/hds/DATA/CSAO/LEGOS_GPOD/SARIN/'
     Gfiles = ant_plus.add_file('GPOD',Gpath,'')
     mode = 'samosa_z'
     ### search through cycles first
@@ -347,17 +308,12 @@ for nd in range(n_days):
     Gfiles.tshift = 1.0  -1e-7
     Gfiles.vars = [
         'all_corrs_ocean_20hz','mss_dtu_15_20hz','mss_dtu_21_20hz',
-        'asa_raw_20hz',
-        'ila_interp_20hz','sla_interp_20hz',
-        'ila_smooth_20hz','sla_smooth_20hz',
-        'flag_floes_meas_valid_20hz','flag_leads_meas_valid_20hz','flag_open_ocean_meas_valid_20hz',
+        'samosap_range_20hz', ### SARIN
                     ]
     Gfiles.names = ['atm_geo_corrections_sum_LEGOS_GPOD',
-        'mean_sea_surf_20_ku_LEGOS_GPOD_DTU15','mean_sea_surf_20_ku_LEGOS_GPOD_DTU21',
-        'ssha_20_ku_LEGOS_GPOD_All',
-        'ssha_interp_20_ku_LEGOS_GPOD_Ice','ssha_interp_20_ku_LEGOS_GPOD_Lead',
-        'ssha_smooth_20_ku_LEGOS_GPOD_Ice','ssha_smooth_20_ku_LEGOS_GPOD_Lead',
-        'flag_floes_LEGOS_GPOD','flag_leads_LEGOS_GPOD','flag_open_ocean_LEGOS_GPOD',
+        'mean_sea_surf_20_ku_LEGOS_GPOD_DTU15',
+        'mean_sea_surf_20_ku_LEGOS_GPOD_DTU21',
+        'range_1_20_ku_LEGOS_GPOD_All', ### SARIN
                     ]
 
     All_files.append(Gfiles)
@@ -489,34 +445,34 @@ for nd in range(n_days):
             track.range_1_20_ku_MSSL_S_attr = track.range_MSSL_Scor_attr
     
             #### 3 DTU - convert heights back to ranges
-            track.range_1_20_ku_DTU_gauss = track.alt_20_ku - track.range_1_20_ku_DTU_gauss
-            track.range_1_20_ku_DTU_th70 = track.alt_20_ku - track.range_1_20_ku_DTU_th70
-            track.range_1_20_ku_DTU_imp_th70 = track.alt_20_ku - track.range_1_20_ku_DTU_imp_th70
-            #### Tide anomaly
-            track.ocean_tide_20_ku_ANOM_DTU_fes = (track.ocean_tide_20_ku_DTU_fes 
-                                    - track.ocean_tide_eq_to_20_ku - track.ocean_tide_to_20_ku)
-            track.ocean_tide_20_ku_ANOM_DTU_fes_attr = {
-                'Description':'Anomaly from L2 ocean_tide_eq+ocean_tide to DTU_fes ocean tide',
-                'coordinates'  :  'lon_poca_20_ku lat_poca_20_ku',
-                'Units':'m',
-                    }
-            track.vars.append('ocean_tide_20_ku_ANOM_DTU_fes')
+#             track.range_1_20_ku_DTU_gauss = track.alt_20_ku - track.range_1_20_ku_DTU_gauss
+#             track.range_1_20_ku_DTU_th70 = track.alt_20_ku - track.range_1_20_ku_DTU_th70
+#             track.range_1_20_ku_DTU_imp_th70 = track.alt_20_ku - track.range_1_20_ku_DTU_imp_th70
+#             #### Tide anomaly
+#             track.ocean_tide_20_ku_ANOM_DTU_fes = (track.ocean_tide_20_ku_DTU_fes 
+#                                     - track.ocean_tide_eq_to_20_ku - track.ocean_tide_to_20_ku)
+#             track.ocean_tide_20_ku_ANOM_DTU_fes_attr = {
+#                 'Description':'Anomaly from L2 ocean_tide_eq+ocean_tide to DTU_fes ocean tide',
+#                 'coordinates'  :  'lon_poca_20_ku lat_poca_20_ku',
+#                 'Units':'m',
+#                     }
+#             track.vars.append('ocean_tide_20_ku_ANOM_DTU_fes')
             #### 4 LEGOS GPOD - asa (ssha) back to range
-            track.range_1_20_ku_LEGOS_GPOD_All = (track.alt_20_ku - 
-                                           (track.ssha_20_ku_LEGOS_GPOD_All 
-                                          + track.mean_sea_surf_20_ku_LEGOS_GPOD_DTU15
-                                          + track.atm_geo_corrections_sum_LEGOS_GPOD))
-            track.range_1_20_ku_LEGOS_GPOD_All_attr = track.ssha_20_ku_LEGOS_GPOD_All_attr
-            track.range_1_20_ku_LEGOS_GPOD_All_attr['MERGE_NOTE'] = 'Converted back to range_1_20_ku equivalent \
-                    using eqn: range = alt_20_ku - (ssha_20_ku_LEGOS_GPOD_All + mean_sea_surf_20_ku_LEGOS_GPOD_DTU15 \
-                    + atm_geo_corrections_sum_LEGOS_GPOD)'
-            track.vars.append('range_1_20_ku_LEGOS_GPOD_All')
+#             track.range_1_20_ku_LEGOS_GPOD_All = (track.alt_20_ku - 
+#                                            (track.ssha_20_ku_LEGOS_GPOD_All 
+#                                           + track.mean_sea_surf_20_ku_LEGOS_GPOD_DTU15
+#                                           + track.atm_geo_corrections_sum_LEGOS_GPOD))
+#             track.range_1_20_ku_LEGOS_GPOD_All_attr = track.ssha_20_ku_LEGOS_GPOD_All_attr
+#             track.range_1_20_ku_LEGOS_GPOD_All_attr['MERGE_NOTE'] = 'Converted back to range_1_20_ku equivalent \
+#                     using eqn: range = alt_20_ku - (ssha_20_ku_LEGOS_GPOD_All + mean_sea_surf_20_ku_LEGOS_GPOD_DTU15 \
+#                     + atm_geo_corrections_sum_LEGOS_GPOD)'
+#             track.vars.append('range_1_20_ku_LEGOS_GPOD_All')
 
             #### Range Anomalies
             p_vars = [p for p in track.vars if 'ISat' in p and 'range' in p]
-            p_vars.extend([p for p in track.vars if 'DTU' in p and 'range' in p])
+#             p_vars.extend([p for p in track.vars if 'DTU' in p and 'range' in p])
             p_vars.extend(['range_1_20_ku_MSSL_D','range_1_20_ku_MSSL_S',
-                           'range_1_20_ku_LEGOS_GPOD_All','range_1_20_ku_CLS'])
+                           'range_1_20_ku_LEGOS_GPOD_All'])##,'range_1_20_ku_CLS'])
             for v in p_vars:
                 v_ANOM = 'range_1_20_ku_ANOM'+v.split('20_ku')[1]
     #             print(v_ANOM)
@@ -547,24 +503,15 @@ for nd in range(n_days):
                 setattr(track,v_ANOM,y)
                 setattr(track,v_ANOM_attr,attr_dict)
                 track.vars.append(v_ANOM)
-            #### 4 IsardSat - simple range comparison
             #### Other Anomalies
-            track.atm_geo_corrections_sum_ANOM_ISat = (track.atm_geo_corrections_sum_ISat 
-                                    - track.geo_corrections_sum_L2 - track.atm_corrections_sum_L2)
-            track.atm_geo_corrections_sum_ANOM_ISat_attr = {
-                'Description':'Anomaly from L2 atm/geo corrections to IsardSat atm/geo corrections',
-                'coordinates'  :  'lon_poca_20_ku lat_poca_20_ku',
-                'Units':'m',
-                        }
-            track.vars.append('atm_geo_corrections_sum_ANOM_ISat')
             #### GPOD corrections
-            track.ssha_interp_20_ku_ANOM_LEGOS_GPOD = track.ssha_interp_20_ku_LEGOS_GPOD_Lead - track.ssha_interp_20_ku
-            track.ssha_interp_20_ku_ANOM_LEGOS_GPOD_attr = {
-                'Description':'Anomaly from L2 ssha_interp to LEGOS GPOD sla_smooth',
-                'coordinates'  :  'lon_poca_20_ku lat_poca_20_ku',
-                'Units':'m',
-                        }
-            track.vars.append('ssha_interp_20_ku_ANOM_LEGOS_GPOD')
+#             track.ssha_interp_20_ku_ANOM_LEGOS_GPOD = track.ssha_interp_20_ku_LEGOS_GPOD_Lead - track.ssha_interp_20_ku
+#             track.ssha_interp_20_ku_ANOM_LEGOS_GPOD_attr = {
+#                 'Description':'Anomaly from L2 ssha_interp to LEGOS GPOD sla_smooth',
+#                 'coordinates'  :  'lon_poca_20_ku lat_poca_20_ku',
+#                 'Units':'m',
+#                         }
+#             track.vars.append('ssha_interp_20_ku_ANOM_LEGOS_GPOD')
             track.atm_geo_corrections_sum_ANOM_LEGOS_GPOD = (track.atm_geo_corrections_sum_LEGOS_GPOD
                                     - track.geo_corrections_sum_L2 - track.atm_corrections_sum_L2)
             track.atm_geo_corrections_sum_ANOM_LEGOS_GPOD_attr = {
@@ -575,19 +522,29 @@ for nd in range(n_days):
             track.vars.append('atm_geo_corrections_sum_ANOM_LEGOS_GPOD')
         
             ### fixing the LEGOS GPOD surface flag
-            temp_mask = np.zeros([track.n_u],dtype=int)
-            temp_mask[track.flag_open_ocean_LEGOS_GPOD == 1.0] = 1
-            temp_mask[track.flag_floes_LEGOS_GPOD == 1.0] = 2
-            temp_mask[track.flag_leads_LEGOS_GPOD == 1.0] = 3
-            track.flag_surf_type_20_ku_LEGOS_GPOD = temp_mask
-            track.flag_surf_type_20_ku_LEGOS_GPOD_attr = {
-    'coordinates': 'lon_20_ku lat_20_ku',
-    'flag_values': '0b, 1b, 2b , 3b',
-    'flag_meanings': 'unknown/mixed ocean sea_ice lead',
-    'long_name': 'surface type flag',
-    'comment': 'A 4-state surface type mask for Cryosat2 data from the LEGOS GPOD along track data.Flag file converted from the three original supplied flag files: flag_floes_meas_valid_20hz,flag_leads_meas_valid_20hz,flag_open_ocean_meas_valid_20h'
-            }
-            track.vars.append('flag_surf_type_20_ku_LEGOS_GPOD')
+#             temp_mask = np.zeros([track.n_u],dtype=int)
+#             temp_mask[track.flag_open_ocean_LEGOS_GPOD == 1.0] = 1
+#             temp_mask[track.flag_floes_LEGOS_GPOD == 1.0] = 2
+#             temp_mask[track.flag_leads_LEGOS_GPOD == 1.0] = 3
+#             track.flag_surf_type_20_ku_LEGOS_GPOD = temp_mask
+#             track.flag_surf_type_20_ku_LEGOS_GPOD_attr = {
+#     'coordinates': 'lon_20_ku lat_20_ku',
+#     'flag_values': '0b, 1b, 2b , 3b',
+#     'flag_meanings': 'unknown/mixed ocean sea_ice lead',
+#     'long_name': 'surface type flag',
+#     'comment': 'A 4-state surface type mask for Cryosat2 data from the LEGOS GPOD along track data.Flag file converted from the three original supplied flag files: flag_floes_meas_valid_20hz,flag_leads_meas_valid_20hz,flag_open_ocean_meas_valid_20h'
+#             }
+#             track.vars.append('flag_surf_type_20_ku_LEGOS_GPOD')
+       
+            ### special SARIN - remove land ice
+            #### surface_type = [80,144,272] ### SARIN
+            SARIN_ocean_mask = track.flag_surf_type_class_20_ku == 272
+            SARIN_ocean_mask[  track.flag_surf_type_class_20_ku == 144] = True
+            SARIN_ocean_mask[  track.flag_surf_type_class_20_ku == 80 ] = True
+
+            track.make_mask([],man_list=SARIN_ocean_mask)
+        
+        
 
             #### remove unwanted vars from the list
             track.vars = [v for v in track.vars if v not in var_remove]
