@@ -20,7 +20,7 @@ t_start = dt.datetime(2019,9,1)
 n_days = 30
 
 ### To make the merged files
-MERGE_TRACKS = True
+MERGE_TRACKS = False
 
 ### To make the merged plots
 PLOT_RANGE = False
@@ -76,28 +76,43 @@ def Comb_ST(track):
 #     mask[track.flag_surf_type_class_20_ku != 256] = 0
 #     return mask
 Combine_vars= [
-#  'ocean_tide_20_ku_ANOM_DTU_fes',
- 'range_1_20_ku',
-#  'range_1_20_ku_ANOM_DTU_imp_th70',
-#  'range_1_20_ku_ANOM_DTU_th70',
-#  'range_1_20_ku_ANOM_DTU_gauss',
- 'range_1_20_ku_ANOM_MSSL_D',
- 'range_1_20_ku_ANOM_MSSL_S',
- 'range_1_20_ku_ANOM_LEGOS_GPOD_All',
-#  'mean_sea_surf_20_ku_ANOM_DTU15',
-#  'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU15',
-#  'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU21',
-#  'atm_geo_corrections_sum_ANOM_LEGOS_GPOD',
-#  'mean_sea_surf_sea_ice_20_ku','geoid_20_ku',
-#  'height_1_20_ku',
-#  'ssha_interp_20_ku','ssha_20_ku','freeboard_20_ku',
-#  'ssha_interp_20_ku_LEGOS_GPOD_Ice',
-#  'ssha_interp_20_ku_LEGOS_GPOD_Lead',
-#  'ssha_smooth_20_ku_LEGOS_GPOD_Ice',
-#  'ssha_smooth_20_ku_LEGOS_GPOD_Lead',
-#  'ssha_interp_20_ku_ANOM_LEGOS_GPOD',
- 'flag_surf_type_class_20_ku',
- 'NSIDC_nasa',
+     'range_1_20_ku' , 
+#      'alt_20_ku' , 
+     'flag_surf_type_class_20_ku' , 
+#      'flag_height_20_ku' , 
+     'height_1_20_ku' , 
+#      'ssha_20_ku' , 
+#      'ssha_interp_20_ku' , 
+     'mean_sea_surf_sea_ice_20_ku' , 
+     'geoid_20_ku' , 
+#      'flag_freeboard_20_ku' , 
+#      'freeboard_20_ku' , 
+#      'time_cor_to_20_ku' , 
+#      'mod_wet_tropo_cor_to_20_ku' , 
+#      'mod_dry_tropo_cor_to_20_ku' , 
+#      'pole_tide_to_20_ku' , 
+#      'solid_earth_tide_to_20_ku' , 
+#      'load_tide_to_20_ku' , 
+#      'ocean_tide_to_20_ku' , 
+#      'ocean_tide_eq_to_20_ku' , 
+#      'iono_cor_gim_to_20_ku' , 
+#      'inv_bar_cor_to_20_ku' , 
+#      'hf_fluct_total_cor_to_20_ku' , 
+     'NSIDC_nasa' , 
+     'atm_geo_corrections_sum_LEGOS_GPOD' , 
+#      'mean_sea_surf_20_ku_LEGOS_GPOD_DTU15' , 
+#      'mean_sea_surf_20_ku_LEGOS_GPOD_DTU21' , 
+#      'range_1_20_ku_LEGOS_GPOD_All' , 
+#      'geo_corrections_sum_L2' , 
+#      'atm_corrections_sum_L2' , 
+#      'range_1_20_ku_MSSL_D' , 
+#      'range_1_20_ku_MSSL_S' , 
+     'range_1_20_ku_ANOM_MSSL_D' , 
+     'range_1_20_ku_ANOM_MSSL_S' , 
+     'range_1_20_ku_ANOM_LEGOS_GPOD_All' , 
+     'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU15' , 
+     'mean_sea_surf_20_ku_ANOM_LEGOS_GPOD_DTU21' , 
+     'atm_geo_corrections_sum_ANOM_LEGOS_GPOD' 
                 ]
 
 
