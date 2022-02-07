@@ -17,19 +17,19 @@ import ant_plus
 
 
 t_start = dt.datetime(2019,9,1) 
-n_days = 30
+n_days = 2
 
 ### To make the merged files
 MERGE_TRACKS = False
 
 ### To make the merged plots
-PLOT_RANGE = False
+PLOT_RANGE = True
 PLOT_RANGE_ANOM = False
 PLOT_EXTRA_ANOM = False
 PLOT_INTERP = False
 
 ### Diagnostic to just give info on a single merged track
-check_single_track = False
+check_single_track = True
 check_filter ='_' # change this string to limit printed info ie: 'range' 
 # check_filter ='ANOM' # Just ANOMALIES
 
@@ -38,7 +38,7 @@ check_filter ='_' # change this string to limit printed info ie: 'range'
 merge_dir = '/home/hds/DATA/CSAO/MERGED/'
 # merge_dir = './test_merge/'
 # fig_dir = './ALL_FIGS/2019-09_merged_all/'
-fig_dir = './ALL_FIGS/2019-09_Amundsen/'
+fig_dir = './ALL_FIGS/2019-09_LRM/'
 # fig_dir = './ALL_FIGS/2019-09_West_Weddell/'
 
 ##### Area restriction (good for combining tracks)
@@ -51,7 +51,7 @@ lats = [-89,-50]
 # lats = [-76,-63]
 
 #### To combine certain data into a single file
-COMBINE_FILES = True
+COMBINE_FILES = False
 # Combine_name = 'L2_ice_leads_Amundsen_'
 # Combine_name = 'L2_ice_leads_West_Weddell_'
 Combine_name = 'ST_and_range_ANOM_all_LRM_'
@@ -97,9 +97,9 @@ Combine_vars= [
 
 
 #### etra output verbos flags
-v_tload = False
-v_tmask = False
-v_save  = False
+v_tload = True
+v_tmask = True
+v_save  = True
 
 
 if PLOT_RANGE or PLOT_RANGE_ANOM or PLOT_EXTRA_ANOM or PLOT_INTERP:
@@ -232,51 +232,61 @@ for nd in range(n_days):
 #         Af.get_files_times(time,verbos=True)
 
 
-    ### GPOD is special because it's in cycles sub folders
+    ### CLS is special because it's in cycles sub folders
 #     Gpath = '/Volumes/BU_extra/CryoSat/Antarctica+/GPOD_2020/'
 #     Gpath = '/home/hds/DATA/CSAO/LEGOS_GPOD/SAR/'
-#     Gpath = '/home/hds/DATA/CSAO/LEGOS_GPOD/SARIN/'
-#     Gfiles = ant_plus.add_file('GPOD',Gpath,'')
-#     mode = 'samosa_z'
-#     ### search through cycles first
-#     cycles = glob.glob(Gpath+'cycle*')
-#     cycles.sort()
-#     Gtime= []
-#     Gfiles.files=[]
-#     tstring = time.strftime('%Y%m%d')
-#     for cycle in cycles:
-#         print(cycle)
-#     #     temp_files = glob.glob(cycle+'/'+mode+'/fb_Z_SH/*.nc')
-#         temp_files = glob.glob(cycle+'/*.nc')
-#         temp_files.sort()
-#         ffound = 0
-#         for file in temp_files:
-#     #         temp_time=dt.datetime.strptime('201'+file.split(cycle)[1].split('_201')[1],'%Y%m%dT%H%M%S')
-#             if tstring in file:
-#                 try:
-#                     ftime = dt.datetime.strptime(
-#                         tstring+file.split(cycle)[1].split(tstring)[1],
-#                         '%Y%m%dT%H%M%S_')
-#                     Gtime.append(ant_plus.dt2CSt(ftime))
-#                     Gfiles.files.append(file)
-#                     ffound+=1
-#                 except ValueError:
-#                     pass
-#         if ffound >0: print('found '+str(ffound)+' files')
-#     # file = glob.glob(Gpath+mode+'/fb_Z_SH/fb_SRL_GPS_*_126_552_20191231T231346_20191231T231433.nc'
-#     # temp_files
-#     Gfiles.times = np.array(Gtime)
-#     Gfiles.tvec = 'time_tai_20hz'
-#     Gfiles.tshift = 1.0  -1e-7
-#     Gfiles.vars = [
-#         'all_corrs_ocean_20hz','mss_dtu_15_20hz','mss_dtu_21_20hz',
-#         'samosap_range_20hz', ### SARIN
-#                     ]
-#     Gfiles.names = ['atm_geo_corrections_sum_LEGOS_GPOD',
-#         'mean_sea_surf_20_ku_LEGOS_GPOD_DTU15',
-#         'mean_sea_surf_20_ku_LEGOS_GPOD_DTU21',
-#         'range_1_20_ku_LEGOS_GPOD_All', ### SARIN
-#                     ]
+    Gpath = '/home/hds/DATA/CSAO/CLS_LRM/'
+    Gfiles = ant_plus.add_file('CLS',Gpath,'')
+    mode = ''
+    ### search through cycles first
+    cycles = glob.glob(Gpath+'cycle*')
+    cycles.sort()
+    Gtime= []
+    Gfiles.files=[]
+    tstring = time.strftime('%Y%m%d')
+    for cycle in cycles:
+        print(cycle)
+    #     temp_files = glob.glob(cycle+'/'+mode+'/fb_Z_SH/*.nc')
+        temp_files = glob.glob(cycle+'/*.nc')
+        temp_files.sort()
+        ffound = 0
+        for file in temp_files:
+    #         temp_time=dt.datetime.strptime('201'+file.split(cycle)[1].split('_201')[1],'%Y%m%dT%H%M%S')
+            if tstring in file:
+                try:
+                    ftime = dt.datetime.strptime(
+                        tstring+file.split(cycle)[1].split(tstring)[1],
+                        '%Y%m%d_%H%M%S_')
+                    Gtime.append(ant_plus.dt2CSt(ftime))
+                    Gfiles.files.append(file)
+                    ffound+=1
+                except ValueError:
+                    pass
+        if ffound >0: print('found '+str(ffound)+' files')
+    # file = glob.glob(Gpath+'/cycle_100/srl_c100_t0001_20160407_125703_20160407_130525.nc'
+    # temp_files
+    Gfiles.times = np.array(Gtime)
+    Gfiles.tvec = 'time'
+    #### units: microseconds since 2010-01-01T00:00:00+00:00
+    Gfiles.tshift = 1.0  -1e-7
+    Gfiles.vars = [
+        'range',
+        'mean_sea_surface',
+        'ocean_tide',
+        'pole_tide',
+        'ionospheric_correction',
+        'wet_tropospheric_correction',
+        'dry_tropospheric_correction',
+        'inverse_barometer_correction',
+        'dynamical_atmospheric_correction',
+        'solid_earth_tide',
+                    ]
+    Gfiles.names = [
+        'range_1_20_ku_CLS', ### LRM
+        'mean_sea_surf_20_ku_CLS',
+        'atm_geo_corrections_sum_LEGOS_GPOD',
+        'mean_sea_surf_20_ku_LEGOS_GPOD_DTU21',
+                    ]
 
 #     All_files.append(Gfiles)
 
